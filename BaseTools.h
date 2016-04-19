@@ -16,6 +16,7 @@ namespace LiDARBaseTools{
 	const float eps = 0.001; 
 
 	struct LasPoint{
+		//LasPointä¸­åŒ…å«xyzç±»åˆ«ã€å¼ºåº¦ 
 		float x;
 		float y;
 		float z;
@@ -23,18 +24,19 @@ namespace LiDARBaseTools{
 		short intensity;
 	};
 
-	struct GrideIndex//¸ñÍøË÷Òı
+	struct GrideIndex//æ ¼ç½‘ç´¢å¼•
 	{
 		std::vector<int> ptIndex;
 	};
 	
 	bool readTXTPointData(const char* filename,std::vector<LasPoint>& inputCloud)
 	/*
-	todo:      read txt point data to a LasPoint vector
+	todo:      read txt point data to a LasPoint vectorï¼ˆinputCloudï¼‰
 	date:      2015.3.8
 	author:    JianPing(lijianping@whu.edu.cn)
 	see:
-	*/	
+	*/
+	//æ–‡ä»¶ä¸­ä¸­åªæœ‰xã€yã€z
 	{
 		std::cout<<"begin reading..."<<std::endl;
 
@@ -74,7 +76,8 @@ namespace LiDARBaseTools{
 
 	bool writeTXTPointData(const char* filename,const std::vector<LasPoint> &outputCloud)
 	/*
-	todo:      write point data of txt formate from a point cloud vector
+	todo:      write point data of txt format from a point cloud vector
+	           å®¹å™¨ä¸­æœ‰ä¸€ç³»åˆ—ç‚¹ï¼ŒæŠŠå®ƒä»¬å†™å…¥åˆ°txtæ ¼å¼æ–‡ä»¶ä¸­
 	out:       
 	date:      2015.3.9
 	author:    JianPing(lijianping@whu.edu.cn)
@@ -141,7 +144,7 @@ namespace LiDARBaseTools{
 		float &maxx,float &minx,float &maxy,float &miny,float &maxz,float &minz,
 		const float cellsize,
 		GrideIndex* &pGrideIndex)
-	/*
+		/*
 	todo:      create a gride of a point cloud
 	out:       size and range of the gride
 	date:      2015.3.8
@@ -277,6 +280,8 @@ namespace LiDARBaseTools{
 	bool CreateBreakCluster(const float *rasterData, const int nrows, const int ncols,
 		std::vector<std::vector<int>> &cluster_result)
 	/*
+	//ä¸€ä¸ªå®¹å™¨é‡Œé¢æœ‰è®¸å¤šæ•´å‹å®¹å™¨std::vector<std::vector<int>> &cluster_result
+	//cluster_resultæ˜¯ä¸€ç»„æ•´å‹å®¹å™¨
 	todo:      cluster nodata areas in a raster
 	date:      2015.3.10
 	author:    JianPing(lijianping@whu.edu.cn)
@@ -289,7 +294,7 @@ namespace LiDARBaseTools{
 			breakMask[i] = false;
 		}
 
-		//ÕÒµ½ÎŞÊı¾İ¸ñÍø
+		//æ‰¾åˆ°æ— æ•°æ®æ ¼ç½‘
 		for (int i=0;i<nrows;i++)
 		{
 			for (int j=0;j<ncols;j++)
@@ -301,17 +306,17 @@ namespace LiDARBaseTools{
 			}
 		}
 
-		//¶ÔÎŞÊı¾İÍø¸ñ½øĞĞ¾ÛÀà
+		//å¯¹æ— æ•°æ®ç½‘æ ¼è¿›è¡Œèšç±»
 		bool* breakMaskCopy = new bool[nrows*ncols];
 		for (int i=0;i<nrows*ncols;i++ )
 		{
 			breakMaskCopy[i] = false;
 		}
 
-		std::deque<int> seed_x;//¾ÛÀàÖÖ×Ó
-		std::deque<int> seed_y;//¾ÛÀàÖÖ×Ó
+		std::deque<int> seed_x;//èšç±»ç§å­
+		std::deque<int> seed_y;//èšç±»ç§å­
 
-		//ÊÕ¼¯ÎŞÊı¾İ¸ñÍøÖÖ×Ó
+		//æ”¶é›†æ— æ•°æ®æ ¼ç½‘ç§å­
 		for (int i=0;i<nrows;i++)
 		{
 			for (int j=0;j<ncols;j++)
@@ -326,7 +331,7 @@ namespace LiDARBaseTools{
 
 		std::vector<int> tempCluster;
 		std::deque<int> tempseed_x;
-		std::deque<int> tempseed_y;//µ±Ç°¾ÛÀà
+		std::deque<int> tempseed_y;//å½“å‰èšç±»
 
 		while (seed_x.size()>0)
 		{
@@ -335,7 +340,7 @@ namespace LiDARBaseTools{
 
 			y_num = seed_y.front();
 
-			//ÅĞ¶Ïµ±Ç°Íø¸ñÊÇ·ñÒÑ¾­±»¾ÛÀà
+			//åˆ¤æ–­å½“å‰ç½‘æ ¼æ˜¯å¦å·²ç»è¢«èšç±»
 			if (breakMaskCopy[y_num*ncols+x_num])
 			{
 				seed_x.pop_front();
@@ -351,7 +356,7 @@ namespace LiDARBaseTools{
 			tempseed_x.push_back(x_num);
 			tempseed_y.push_back(y_num);
 			tempCluster.push_back(y_num*ncols+x_num);
-			breakMaskCopy[y_num*ncols+x_num] = true;//ÉèÖÃµ±Ç°µãÒÑ¾­±»¾ÛÀà
+			breakMaskCopy[y_num*ncols+x_num] = true;//è®¾ç½®å½“å‰ç‚¹å·²ç»è¢«èšç±»
 
 			while (tempseed_x.size()>0)
 			{
@@ -361,7 +366,7 @@ namespace LiDARBaseTools{
 				y_num = tempseed_y.front();
 				tempseed_y.pop_front();
 
-				for (int i=y_num-1;i<=y_num+1;i++)//8ÁÙÓò
+				for (int i=y_num-1;i<=y_num+1;i++)//8ä¸´åŸŸ
 				{
 					if (i<0||i>=nrows)
 						continue;
@@ -392,19 +397,19 @@ namespace LiDARBaseTools{
 		return true;
 	}
 
-	bool Ruster(std::vector<std::vector<int>> &cluster_raster,
-		std::vector<std::vector<int>> &rust_raster,
-		std::vector<std::vector<int>> &boundary_raster,
+	bool Ruster(std::vector<std::vector<int>> &cluster_raster,//æ¯ä¸€ä¸ªç©ºå€¼èšç±»ç»“æœ
+		std::vector<std::vector<int>> &rust_raster,//æ¯ä¸€ä¸ªè…èš€åŒº
+		std::vector<std::vector<int>> &boundary_raster,//æ¯ä¸€ä¸ªè…èš€è¾¹ç•Œ
 		const int nrows,const int ncols)
 	{
-		bool* RustMask = new bool[ncols*nrows];//¹¹½¨ÑÚÄ¤£¬¼ÇÂ¼´ı¸¯Ê´µã
-		std::vector<int> temp_cluster;//µ±Ç°´ı¸¯Ê´
+		bool* RustMask = new bool[ncols*nrows];//æ„å»ºæ©è†œï¼Œè®°å½•å¾…è…èš€ç‚¹
+		std::vector<int> temp_cluster;//å½“å‰å¾…è…èš€
 		for(int i = 0;i<ncols*nrows;i++)
 		{
 			RustMask[i] = false;
 		}
 
-		for(int i= 0;i<cluster_raster.size();i++)//ÕÒµ½´ı¸¯Ê´µã£¬¼ÇÂ¼ÔÚÑÚÄ¤ÖĞ
+		for(int i= 0;i<cluster_raster.size();i++)//æ‰¾åˆ°å¾…è…èš€ç‚¹ï¼Œè®°å½•åœ¨æ©è†œä¸­
 		{
 			temp_cluster = cluster_raster[i];
 			for(int j = 0;j<temp_cluster.size();j++)
@@ -415,11 +420,11 @@ namespace LiDARBaseTools{
 		}
 
 
-		std::vector<int> temp_rust_raster;//µ±Ç°¸¯Ê´½á¹û
-		std::vector<int> temp_boundary_raster;//µ±Ç°¸¯Ê´±ß½ç
-		for(int i= 0;i<cluster_raster.size();i++)//¸¯Ê´ÔËËã
+		std::vector<int> temp_rust_raster;//å½“å‰è…èš€ç»“æœ
+		std::vector<int> temp_boundary_raster;//å½“å‰è…èš€è¾¹ç•Œ
+		for(int i= 0;i<cluster_raster.size();i++)//è…èš€è¿ç®—
 		{
-			temp_cluster = cluster_raster[i];//µ±Ç°´ı¸¯Ê´
+			temp_cluster = cluster_raster[i];//å½“å‰å¾…è…èš€
 			for(int j = 0;j<temp_cluster.size();j++)
 			{
 				int num_row,num_col;
@@ -427,7 +432,7 @@ namespace LiDARBaseTools{
 				num_col = temp_cluster[j]%ncols;
 
 				bool flag = true;
-				for(int ii = num_row-1;ii<=num_row+1;ii++)//°ËÁÙÓò
+				for(int ii = num_row-1;ii<=num_row+1;ii++)//å…«ä¸´åŸŸ
 				{
 					if(ii<0||ii>=nrows)
 						continue;
